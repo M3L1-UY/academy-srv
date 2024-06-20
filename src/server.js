@@ -39,7 +39,7 @@ app.get("/", (req, res) => {
 // /* ************ acceso a las rutas de BD MongoDB ***********/
 app.use("/api/", require("./routes/mongodb/users.js"));
 app.use("/api/", require("./routes/mongodb/course.js"));
-app.use("/api/", require("./routes/mongodb/Teacher.js"));
+app.use("/api/", require("./routes/mongodb/teacher.js"));
 app.use("/api/", require("./routes/mongodb/Student.js"));
 app.use("/api/", require("./routes/mongodb/Matricula.js"));
 app.use("/api/", require("./routes/mongodb/contacts.js"));
