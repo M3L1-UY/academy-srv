@@ -14,7 +14,6 @@ console.log(process.env.PORT);
 
 require("./config/configMongoDB.js");
 
-// Configure CORS
 app.use(cors({
   origin: ['https://main--earnest-klepon-d116df.netlify.app', 'https://earnest-klepon-d116df.netlify.app', 'http://localhost:5173'],
   credentials: true,

@@ -9,20 +9,13 @@ const {
   getCourseCodigo,
 } = require("../../controller/mongodb/courses");
 
-
-/** ***************************************** */
-/* Rutas de acceso a la tabla de cursos       */
-/** **************************************** */
+const { isAuthenticated, isAdmin } = require("../../middleware/auth");
 
 router.get("/courses", getCourses);
 router.get("/course/:id", getCourse);
 router.get("/course/:codigo", getCourseCodigo);
-router.post("/course", AddCourse);
-router.put("/course/:id", upDateCourse);
-router.delete("/course/:id", delCourse);
-
-/** ***************************************** */
-/* Rutas de acceso a la tabla de imagenes    */
-/** **************************************** */
+router.post("/course",  isAuthenticated, isAdmin(['isAdmin']), AddCourse);
+router.put("/course/:id",  isAuthenticated, isAdmin(['isAdmin']), upDateCourse);
+router.delete("/course/:id",  isAuthenticated, isAdmin(['isAdmin']), delCourse);
 
 module.exports = router;

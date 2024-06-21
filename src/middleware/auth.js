@@ -15,11 +15,11 @@ const roleDescriptions = {
 };
 
 const getRoleDescription = (role) => {
-  return roleDescriptions[role] || role; // Devuelve la descripción del rol o el rol tal cual si no hay descripción
+  return roleDescriptions[role] || role; 
 };
 
 exports.isAuthenticated = (req, res, next) => {
-  const token = req.body.token;
+  const token = req.cookies.jwtAcademy || req.body.token || req.headers['authorization'];
   if (!token) {
     return res.status(401).json({
       status: "401",
@@ -28,27 +28,7 @@ exports.isAuthenticated = (req, res, next) => {
   }
   try {
     const user = verifyToken(token);
-    req.user = user; // Guarda toda la información del usuario, no solo el id
-    next();
-  } catch (error) {
-    res.status(401).json({
-      status: "401",
-      message: "Token inválido.",
-    });
-  }
-};
-
-exports.isSeller = (req, res, next) => {
-  const bodyToken = req.cookies.body_token;
-  if (!bodyToken) {
-    return res.status(401).json({
-      status: "401",
-      message: "Debe loguearse para utilizar este recurso.",
-    });
-  }
-  try {
-    const user = verifyToken(bodyToken);
-    req.user = user;
+    req.user = user; 
     next();
   } catch (error) {
     res.status(401).json({
@@ -60,29 +40,18 @@ exports.isSeller = (req, res, next) => {
 
 exports.isAdmin = (roles) => {
   return (req, res, next) => {
-    const token = req.body.token;
-    if (!token) {
+    if (!req.user) {
       return res.status(401).json({
         status: "401",
         message: "Debe loguearse para utilizar este recurso.",
       });
     }
-    try {
-      const user = verifyToken(token);
-      console.log(user.role)
-      if (!roles.includes(user.role)) {
-        return res.status(401).json({
-          status: "401",
-          message: `Como ${getRoleDescription(user.role)}, no puedes acceder a este recurso!`,
-        });
-      }
-      req.user = user;
-      next();
-    } catch (error) {
-      res.status(401).json({
-        status: "401",
-        message: "Token inválido.",
+    if (!roles.includes(req.user.role)) {
+      return res.status(403).json({
+        status: "403",
+        message: `Como ${getRoleDescription(req.user.role)}, no puedes acceder a este recurso!`,
       });
     }
+    next();
   };
 };

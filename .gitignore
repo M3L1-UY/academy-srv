@@ -14,3 +14,4 @@ lerna-debug.log*
 !.vscode/extensions.json
 .idea
 src/envirome
+.gitignore

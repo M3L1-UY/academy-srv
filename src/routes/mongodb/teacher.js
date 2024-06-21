@@ -9,15 +9,13 @@ const {
   getTeacherDni,
 } = require("../../controller/mongodb/teachers");
 
-/** ***************************************** */
-/* Rutas de acceso a la tabla de Profesores  */
-/** **************************************** */
+const { isAuthenticated, isAdmin } = require("../../middleware/auth");
 
 router.get("/teachers", getTeachers);
 router.get("/teacher/:id", getTeacher);
 router.get("/teacher/:dni", getTeacherDni);
-router.post("/teacher", AddTeacher);
-router.delete("/teacher/:id", delTeacher);
-router.put("/teacher/:id",  upDateTeacher);
+router.post("/teacher", isAuthenticated, isAdmin(['isAdmin']), AddTeacher);
+router.delete("/teacher/:id", isAuthenticated, isAdmin(['isAdmin']), delTeacher);
+router.put("/teacher/:id", isAuthenticated, isAdmin(['isAdmin']), upDateTeacher);
 
 module.exports = router;

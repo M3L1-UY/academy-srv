@@ -13,17 +13,12 @@ const {
 } = require("../../controller/mongodb/users");
 const { isAuthenticated, isAdmin } = require("../../middleware/auth");
 
-
-/** ***************************************** */
-/* Rutas de acceso a la tabla de cursos       */
-/** **************************************** */
-
-router.get("/users",isAuthenticated, getUsers);
+router.get("/users",isAuthenticated, isAdmin(['isAdmin']), getUsers);
 router.get("/user/:id", isAuthenticated,  isAdmin(['isAdmin']), getUser);
-router.post("/user", isAuthenticated, AddUser);
+router.post("/user", isAuthenticated, isAdmin(['isAdmin']), AddUser);
 router.post("/user/login", loginUser);
-router.post("/user/logout", logoutUser);
-router.delete("/user/:id", delUser);
+router.post("/user/logout", isAuthenticated, logoutUser);
+router.delete("/user/:id",  isAuthenticated, isAdmin(['isAdmin']),delUser);
 router.put(
   "/user/cambio",
   isAuthenticated,
@@ -31,10 +26,5 @@ router.put(
 );
 router.put("/user/:id", upDateUser);
 
-/** ***************************************** */
-/* Rutas de acceso a la tabla de imagenes    */
-/** **************************************** */
-
-// router.post("/image", fileUpload, UserImg);
 
 module.exports = router;

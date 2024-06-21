@@ -8,38 +8,17 @@ const {
   delStudent,
   updateStudent,
 } = require("../../controller/mongodb/students");
-
-/* *******************************************************  */
-/*             Ruta de acceso a archivos Students           */
-/* *******************************************************  */
+const { isAuthenticated, isAdmin } = require("../../middleware/auth");
 
 router.get("/students", getStudents);
 router.get("/student/:id", getStudent);
 router.get("/studentdni/:dni", getStudentDni);
-router.post("/student", validarData, AddStudent);
-router.put("/student/:id", validarData, updateStudent);
-router.delete("/student/:id", delStudent);
-
-/* *******************************************************  */
-/*              Sección de validación de datos              */
-/* *******************************************************  */
+router.post("/student", isAuthenticated,isAdmin(['isAdmin', 'isStudent']), validarData, AddStudent);
+router.put("/student/:id", isAuthenticated, isAdmin(['isAdmin', 'isStudent']), validarData, updateStudent);
+router.delete("/student/:id", isAuthenticated, isAdmin(['isAdmin']), delStudent);
 
 function validarData(req, res, next) {
-  // console.log("Body....", req.body);
   const { dni, nombre, descripcion } = req.body;
-
-  // if (!dni) {
-  //   return res.status(400).json({
-  //     message: "Ingrese un Dni válido..",
-  //     exito: false,
-  //   });
-  // }
-  // if (!nombre) {
-  //   return res.status(400).json({
-  //     message: "El nombre, del Estudiante está vacío..",
-  //     exito: false,
-  //   });
-  // }
   next();
 }
 

@@ -7,9 +7,11 @@ const {
   updateContact
 } = require("../../controller/mongodb/contact");
 
+const { isAuthenticated, isAdmin } = require("../../middleware/auth");
+
 router.post("/contact", AddContact);
-router.get("/contacts", getContacts);
-router.delete("/contact/:id", delContact);
-router.put("/contact/:id", updateContact);
+router.get("/contacts", isAuthenticated, getContacts);
+router.delete("/contact/:id",isAuthenticated, isAdmin(['isAdmin']), delContact);
+router.put("/contact/:id",isAuthenticated, isAdmin(['isAdmin']), updateContact);
 
 module.exports = router;
