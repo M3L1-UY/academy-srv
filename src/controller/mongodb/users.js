@@ -223,6 +223,7 @@ const loginUser = async (req, res, next) => {
   const token = generarJWT(usuario);
   const regNew = {
     id: usuario.id,
+    dni: usuario.dni,
     nombre: usuario.nombre,
     apellido: usuario.apellido,
     role: usuario.role,
