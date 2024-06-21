@@ -16,9 +16,10 @@ require("./config/configMongoDB.js");
 
 // Configure CORS
 app.use(cors({
-  origin: 'https://main--earnest-klepon-d116df.netlify.app', // Specify the exact origin of your frontend
+  origin: ['https://main--earnest-klepon-d116df.netlify.app', 'https://earnest-klepon-d116df.netlify.app', 'http://localhost:5173'],
   credentials: true,
 }));
+
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
