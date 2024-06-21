@@ -5,13 +5,12 @@ const morgan = require("morgan");
 const cors = require("cors");
 const path = require("path");
 const port = process.env.PORT || 5000;
-const app = express();+
+const app = express();
 
 app.use(helmet());
 app.use(morgan("dev"));
 app.use(cookieParser());
 console.log(process.env.PORT);
-
 
 require("./config/configMongoDB.js");
 
@@ -19,11 +18,20 @@ app.use(
   cors({
     origin: [
       "http://localhost:5173",
-      "https://earnest-klepon-d116df.netlify.app/",
+      "https://earnest-klepon-d116df.netlify.app",
     ],
     credentials: true,
   })
 );
+
+// Middleware para asegurar que los encabezados CORS están presentes
+app.use((req, res, next) => {
+  res.header("Access-Control-Allow-Origin", "http://localhost:5173, https://earnest-klepon-d116df.netlify.app");
+  res.header("Access-Control-Allow-Credentials", "true");
+  res.header("Access-Control-Allow-Methods", "GET,HEAD,OPTIONS,POST,PUT");
+  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, Authorization");
+  next();
+});
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -50,21 +58,13 @@ app.use("/api/", require("./routes/mongodb/contacts.js"));
 app.use("*", (req, res) => {
   console.log("Request Type:", req.method);
   console.log("Request URL:", req.originalUrl);
-});
-
-app.use((red, res, next) => {
-  res.status(404).sendFile(__dirname + "/public/html/404.html");
+  res.status(404).send("Not Found");
 });
 
 app.get("/imagens/:img", function (req, res) {
-  res.sendFile(`imagens/${img}`);
+  const img = req.params.img;
+  res.sendFile(path.join(__dirname, `imagens/${img}`));
 });
-
-app.use("*", (req, res) => {
-  console.log("Request Type:", req.method);
-  console.log("Request URL:", req.originalUrl);
-});
-
 
 // Middleware de manejo de errores
 const errorHandler = (err, req, res, next) => {
