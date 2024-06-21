@@ -9,7 +9,7 @@ const dbmongo_host = process.env.DB_MONGO_HOST;
 const dbmongo_db = process.env.DB_DATABASE;
 
 //const MONGODB_URL = `mongodb://${dbmongo_host}/${dbmongo_db}`;
-const MONGODB_URL  = process.env.DB_MONGO_URIg;
+const MONGODB_URL  = process.env.DB_MONGO_URI;
 const connectWithRetry = () => {
   console.log('Conexión MongoDB con reintento');
   return mongoose.connect(MONGODB_URL, {
