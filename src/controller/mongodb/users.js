@@ -241,7 +241,7 @@ const loginUser = async (req, res, next) => {
 };
 
 const logoutUser = async (req, res) => {
-  res.clearCookie("body_token");
+  res.clearCookie("jwtAcademy"); 
   res.status(200).json({
     status: "200",
     message: "Logout exitoso",

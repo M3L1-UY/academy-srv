@@ -15,6 +15,7 @@ const AddContact = async (req, res) => {
     ciudad: req.body.ciudad,
     curso: req.body.curso,
     comentario: req.body.comentario,
+    done: false,
   });
   try {
     const registro = await contact.save();
@@ -83,7 +84,6 @@ const AddContact = async (req, res) => {
     });
 
 
-    // Send email to the company's email as a backup
     await enviarMail({
       email: 'testing.app.web@gmail.com',
       subject: `Nuevo mensaje de contacto de ${contact.nombre}`,
@@ -185,8 +185,33 @@ const delContact = async (req, res) => {
   }
 }
 
+const updateContact = async (req, res) => {
+  const id = req.params.id;
+  try {
+    const contact = await Contacts.findById(id);
+    if (!contact) {
+      return res.status(404).json({ message: "Contacto no encontrado" });
+    }
+
+    const updatedContact = await Contacts.findByIdAndUpdate(
+      id,
+      { done: !contact.done },
+      { new: true }
+    );
+
+    res.json({
+      data: updatedContact,
+      message: "El registro fue actualizado",
+    });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+
 module.exports = {
     AddContact,
     getContacts,
-    delContact
+    delContact,
+    updateContact
 };

@@ -8,6 +8,16 @@ const verifyToken = (token) => {
   }
 };
 
+const roleDescriptions = {
+  isAdmin: 'administrativo',
+  isTeacher: 'profesor',
+  isStudent: 'estudiante',
+};
+
+const getRoleDescription = (role) => {
+  return roleDescriptions[role] || role; // Devuelve la descripción del rol o el rol tal cual si no hay descripción
+};
+
 exports.isAuthenticated = (req, res, next) => {
   const token = req.body.token;
   if (!token) {
@@ -18,7 +28,7 @@ exports.isAuthenticated = (req, res, next) => {
   }
   try {
     const user = verifyToken(token);
-    req.user = user.id;
+    req.user = user; // Guarda toda la información del usuario, no solo el id
     next();
   } catch (error) {
     res.status(401).json({
@@ -59,10 +69,11 @@ exports.isAdmin = (roles) => {
     }
     try {
       const user = verifyToken(token);
-      if (user.role !== roles) {
+      console.log(user.role)
+      if (!roles.includes(user.role)) {
         return res.status(401).json({
           status: "401",
-          message: `Como ${user.role}, no puedes acceder a este recurso!`,
+          message: `Como ${getRoleDescription(user.role)}, no puedes acceder a este recurso!`,
         });
       }
       req.user = user;

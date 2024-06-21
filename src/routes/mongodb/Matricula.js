@@ -8,16 +8,17 @@ const {
   delMatricula,
   updateMatricula,
 } = require("../../controller/mongodb/matriculas");
+const { isAdmin } = require("../../middleware/auth");
 
 /* *******************************************************  */
 /*             Ruta de acceso a archivos Matriculas           */
 /* *******************************************************  */
 
-router.get("/matriculas", getMatriculas);
-router.get("/matricula/:id", getMatricula);
+router.get("/matriculas", isAdmin(['isAdmin', 'isTeacher']), getMatriculas);
+router.get("/matricula/:id",  isAdmin(['isAdmin', 'isTeacher']),  getMatricula);
 router.get("/matricula/:dni", getMatriculaDni);
-router.post("/matricula", validarData, AddMatricula);
-router.put("/matricula/:id", validarData, updateMatricula);
+router.post("/matricula",  isAdmin(['isAdmin']), validarData, AddMatricula);
+router.put("/matricula/:id",  isAdmin(['isAdmin']), validarData,  updateMatricula);
 router.delete("/matricula/:id", delMatricula);
 function validarData(req, res, next) {
   // console.log("Body....", req.body);
