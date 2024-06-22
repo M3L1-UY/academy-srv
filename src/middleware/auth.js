@@ -40,13 +40,7 @@ exports.isAuthenticated = (req, res, next) => {
 
 exports.isAdmin = (roles) => {
   return (req, res, next) => {
-    if (!req.user) {
-      return res.status(401).json({
-        status: "401",
-        message: "Debe loguearse para utilizar este recurso.",
-      });
-    }
-    if (!roles.includes(req.user.role)) {
+      if (!roles.includes(req.user.role)) {
       return res.status(403).json({
         status: "403",
         message: `Como ${getRoleDescription(req.user.role)}, no puedes acceder a este recurso!`,
