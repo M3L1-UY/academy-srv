@@ -20,6 +20,7 @@ const getRoleDescription = (role) => {
 
 exports.isAuthenticated = (req, res, next) => {
   const token = req.cookies.jwtAcademy || req.body.token || req.headers['authorization'];
+  console.log("TOOKEN " + token)
   if (!token) {
     return res.status(401).json({
       status: "401",
