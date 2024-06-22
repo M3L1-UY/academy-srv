@@ -27,9 +27,19 @@ exports.isAuthenticated = (req, res, next) => {
       message: "Debe loguearse para utilizar esta función.",
     });
   }
+
+
   try {
     const user = verifyToken(token);
-    req.user = user; 
+    const authorizationHeader = req.headers['authorization'];
+    if (authorizationHeader) {
+      const token = authorizationHeader.split(' ')[1];
+      token = user; 
+    }
+    else
+    {
+      req.user = user;    
+    }
     next();
   } catch (error) {
     res.status(401).json({
