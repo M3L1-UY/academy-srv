@@ -19,36 +19,44 @@ const getRoleDescription = (role) => {
 };
 
 exports.isAuthenticated = (req, res, next) => {
-  const token = req.cookies.jwtAcademy || req.body.token || req.headers['authorization'].split(' ')[1];
-  console.log("TOOKEN " + token)
+  let token = req.cookies.jwtAcademy || req.body.token;
+
+  // Verifica si hay un encabezado de autorización y extrae el token si está presente
+  if (req.headers['authorization']) {
+    const authorizationHeader = req.headers['authorization'];
+    if (authorizationHeader.startsWith('Bearer ')) {
+      token = authorizationHeader.split(' ')[1];
+    } else {
+      return res.status(401).json({
+        status: "401",
+        message: "Formato de token inválido. Debe ser 'Bearer <token>'."
+      });
+    }
+  }
+
+  // Si no se proporcionó ningún token
   if (!token) {
     return res.status(401).json({
       status: "401",
-      message: "Debe loguearse para utilizar esta funciónnn.",
+      message: "Debe estar autenticado para acceder a esta función."
     });
   }
 
-
   try {
-    const user = verifyToken(token);
-    const authorizationHeader = req.headers['authorization'];
-    if (authorizationHeader) {
-      const token = authorizationHeader.split(' ')[1];
-      token = user; 
-    }
-    else
-    {
-      req.user = user;    
-    }
+    const user = verifyToken(token); // Verifica y decodifica el token
+
+    // Asigna el usuario al objeto de solicitud (req) para que esté disponible en las rutas protegidas
+    req.user = user;
+
+    // Llama a la siguiente función en la cadena de middleware
     next();
   } catch (error) {
-    res.status(401).json({
+    return res.status(401).json({
       status: "401",
-      message: "Token inválido.",
+      message: "Token inválido o expirado."
     });
   }
 };
-
 exports.isAdmin = (roles) => {
   return (req, res, next) => {
       if (!roles.includes(req.user.role)) {
