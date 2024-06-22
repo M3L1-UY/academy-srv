@@ -19,12 +19,12 @@ const getRoleDescription = (role) => {
 };
 
 exports.isAuthenticated = (req, res, next) => {
-  const token = req.cookies.jwtAcademy || req.body.token || req.headers['authorization'];
+  const token = req.cookies.jwtAcademy || req.body.token || req.headers['authorization'].split(' ')[1];
   console.log("TOOKEN " + token)
   if (!token) {
     return res.status(401).json({
       status: "401",
-      message: "Debe loguearse para utilizar esta función.",
+      message: "Debe loguearse para utilizar esta funciónnn.",
     });
   }
 
