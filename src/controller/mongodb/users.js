@@ -234,7 +234,7 @@ const loginUser = async (req, res, next) => {
     login: true,
   };
 
-  res.cookie("jwtAcademy", token);
+  res.cookie("jwtAcademy", regNew);
   res.status(200).json({
     status: "200",
     data: regNew,

@@ -19,8 +19,8 @@ const getRoleDescription = (role) => {
 };
 
 exports.isAuthenticated = (req, res, next) => {
-  let token = req.cookies.jwtAcademy || req.body.token;
-
+  let token = req.body.token;
+  console.log(req)
   // Verifica si hay un encabezado de autorización y extrae el token si está presente
   if (req.headers['authorization']) {
     const authorizationHeader = req.headers['authorization'];
