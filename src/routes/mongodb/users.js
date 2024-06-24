@@ -13,7 +13,7 @@ const {
 } = require("../../controller/mongodb/users");
 const { isAuthenticated, isAdmin } = require("../../middleware/auth");
 
-router.get("/users",isAuthenticated, isAdmin(['isAdmin']), getUsers);
+router.post("/users",isAuthenticated, isAdmin(['isAdmin']), getUsers);
 router.get("/user/:id", isAuthenticated,  isAdmin(['isAdmin']), getUser);
 router.post("/user", isAuthenticated, isAdmin(['isAdmin']), AddUser);
 router.post("/user/login", loginUser);
